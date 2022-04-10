@@ -12,6 +12,17 @@ task :e2e do
   sh 'e2e/main.sh'
 end
 
+namespace :docker do
+  desc 'build'
+  task :build do
+    sh 'docker buildx bake'
+  end
+  desc 'push'
+  task :push do
+    sh 'docker buildx bake --push'
+  end
+end
+
 task default: %i[
   rubocop:auto_correct
   rubocop

@@ -12,8 +12,15 @@ _verokrypto() {
   fi
 }
 
+_verokrypto --version
+
 if [ -d ../vero ]; then
-  _verokrypto process coinex ../vero/a/coinex-execution-history.xlsx
+  for path in ../vero/*/*; do
+    name=$(basename $path)
+    kind=${name%%-*}
+    _verokrypto process "$kind" "$path"
+    cat "$path" | _verokrypto process "$kind" -
+  done
 fi
 
 echo ""

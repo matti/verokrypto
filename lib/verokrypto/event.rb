@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require 'digest'
 module Verokrypto
   class Event
-    attr_reader :source, :kind, :date, :fee
+    attr_reader :id, :source, :date, :fee, :debit, :credit
     attr_accessor :original
 
     def initialize(source)
@@ -10,24 +11,36 @@ module Verokrypto
     end
 
     def valid!
-      return if @date && @fee
+      return if @id && @date && @fee && @debit && @credit
 
-      pp self
+      warn self
       raise 'not valid'
+    end
+
+    def id=(obj)
+      @id = Digest::MD5.hexdigest obj.to_s
     end
 
     def date=(utc)
       @date = DateTime.parse utc
     end
 
-    def fee=(string)
-      @fee = money_parse(string)
+    def fee=(pair)
+      @fee = money_parse(pair)
+    end
+
+    def debit=(pair)
+      @debit = money_parse(pair)
+    end
+
+    def credit=(pair)
+      @credit = money_parse(pair)
     end
 
     private
 
-    def money_parse(string)
-      amount_string, currency = string.split
+    def money_parse(pair)
+      amount_string, currency = pair
       Money.from_amount(amount_string.to_f, currency)
     rescue Money::Currency::UnknownCurrency
       ::Money::Currency.register({

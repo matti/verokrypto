@@ -8,8 +8,11 @@ module Verokrypto
       banner 'verokrypto'
 
       option ['-v', '--version'], :flag, 'Show version information' do
-        puts Verokrypto::VERSION
-        exit(0)
+        puts Gem.loaded_specs.fetch(
+          'verokrypto',
+          Struct.new(:version).new('dev')
+        ).version
+        exit
       end
 
       subcommand ['process'], 'Process', Verokrypto::Cli::ProcessCommand

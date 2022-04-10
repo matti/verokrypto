@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'lib/verokrypto/version'
-
 Gem::Specification.new do |spec|
   spec.name = 'verokrypto'
-  spec.version = Verokrypto::VERSION
+  spec.version = '0.0.2'
   spec.authors = ['Matti Paksula']
   spec.email = ['matti.paksula@iki.fi']
 
@@ -28,7 +26,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'clamp', '1.3.2'
-  spec.add_dependency 'monetize', '1.12.0'
   spec.add_dependency 'money', '6.16.0'
 
   spec.add_dependency 'rubyXL', '3.4.22'

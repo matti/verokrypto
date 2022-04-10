@@ -9,8 +9,14 @@ module Verokrypto
       @events = events
     end
 
-    def self.from_xlsx(path)
-      fields, rows = Verokrypto::Xlsx.new(path).parse
+    def sort!
+      # no milliseconds
+      # @events.sort! { |a, b| a.date <=> b.date }
+      @events.reverse!
+    end
+
+    def self.from_xlsx(reader)
+      fields, rows = Verokrypto::Helpers.parse_xlsx(reader)
 
       events = []
       rows.each do |row|
@@ -27,9 +33,34 @@ module Verokrypto
 
     def self.to_event(values)
       e = Verokrypto::Event.new :coinex
-      e.original = values
-      e.date = "#{values.fetch('Execution Time')} UTC"
+      e.id = values
 
+      warn values
+      case values.fetch('Side')
+      when 'sell'
+        # "RTMUSDT".gsub('USDT', '')
+        e.debit = [
+          values.fetch('Executed Amount'),
+          values.fetch('Trading pair/Contract name').gsub(values.fetch('Fees Coin Type'), '')
+        ]
+        e.credit = [
+          values.fetch('Executed Value'),
+          values.fetch('Fees Coin Type')
+        ]
+      when 'buy'
+        e.debit = [
+          values.fetch('Executed Value'),
+          values.fetch('Trading pair/Contract name').gsub(values.fetch('Fees Coin Type'), '')
+        ]
+        e.credit = [
+          values.fetch('Executed Amount'),
+          values.fetch('Fees Coin Type')
+        ]
+      else
+        raise values.to_s
+      end
+
+      e.date = "#{values.fetch('Execution Time')} UTC"
       # from_amount:
       #   from_currency:
       #   to_amount:
@@ -48,7 +79,10 @@ module Verokrypto
       e.fee = [
         values.fetch('Fees'),
         values.fetch('Fees Coin Type')
-      ].join(' ')
+      ]
+
+      warn e
+      e.original = values
 
       e
     end
