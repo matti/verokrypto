@@ -14,6 +14,10 @@ module Verokrypto
                    Verokrypto::Coinex.trades_from_xlsx(reader)
                  when 'coinex:assets'
                    Verokrypto::Coinex.assets_from_xlsx(reader)
+                 when 'coinbase'
+                   Verokrypto::Coinbase.from_csv(reader)
+                 when 'southxchange'
+                   Verokrypto::Southxchange.from_csv(reader)
                  else
                    raise "Unknown '#{source_name}'"
                  end
@@ -22,9 +26,9 @@ module Verokrypto
 
         last = nil
         source.events.each do |e|
+          pp e
           if last
             delta = e.date.to_time - last.date.to_time
-
             e.date = (last.date.to_time + 1).to_datetime if delta <= 1
           end
 

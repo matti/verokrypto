@@ -21,6 +21,8 @@ require_relative 'verokrypto/source'
 require_relative 'verokrypto/event'
 require_relative 'verokrypto/coinex'
 require_relative 'verokrypto/koinly'
+require_relative 'verokrypto/coinbase'
+require_relative 'verokrypto/southxchange'
 
 module Verokrypto
   class Error < StandardError; end

@@ -2,6 +2,8 @@
 
 module Verokrypto
   class Source
+    attr_reader :events
+
     def fees
       currencies = {}
       events.each do |e|

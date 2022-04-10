@@ -27,5 +27,4 @@ task default: %i[
   rubocop:auto_correct
   rubocop
   spec
-  e2e
 ]

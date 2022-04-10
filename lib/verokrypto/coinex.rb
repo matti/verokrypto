@@ -3,8 +3,6 @@
 # require 'time'
 module Verokrypto
   class Coinex < Source
-    attr_reader :events
-
     def initialize(events)
       super()
       @events = events
