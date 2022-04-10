@@ -19,27 +19,20 @@ if [ -d ../vero ]; then
   csvs=$(mktemp -d)
   for source_path in ../vero/*/*; do
     source=${source_path##*/}
+    mkdir -p "$csvs/$source"
 
     for csv_path in $source_path/*; do
       csv_basename=${csv_path##*/}
       kind=${csv_basename%%-*}
+      name=${csv_basename%%.*}
 
-      echo ve process $kind $csv_path
-      mkdir -p "$csvs/$source"
-      _verokrypto "$csvs/$source/$csv_basename" process "$kind" "$csv_path"
+      _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path"
     done
+
+    _verokrypto "$csvs/$source/merged.csv" csv $csvs/$source/*
+    cp "$csvs/$source/merged.csv" $source.csv
+    echo "$csvs/$source"
   done
-
-  #   source=${name%%-*}
-  #   kind=${source%%:*}
-  #   echo $name $source $kind
-  #   _verokrypto "$csvs/$name" process "$source" "$path"
-  # done
-  # ls $csvs/*
-
-  # _verokrypto "$csvs/merged.csv" csv $csvs/*
-
-  # cp "$csvs/merged.csv" .
 fi
 
 echo ""
