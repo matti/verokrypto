@@ -10,23 +10,48 @@ module Verokrypto
         reader = wrap(path)
 
         source = case source_name
-                 when 'coinex'
-                   Verokrypto::Coinex.from_xlsx(reader)
+                 when 'coinex:trades'
+                   Verokrypto::Coinex.trades_from_xlsx(reader)
+                 when 'coinex:assets'
+                   Verokrypto::Coinex.assets_from_xlsx(reader)
                  else
                    raise "Unknown '#{source_name}'"
                  end
+
         source.sort!
 
-        warn ''
-        warn 'fees'
-        Verokrypto::Helpers.print_pairs(source.fees)
-        warn 'debits'
-        Verokrypto::Helpers.print_pairs(source.balance[:debits])
-        warn 'credits'
-        Verokrypto::Helpers.print_pairs(source.balance[:credits])
+        last = nil
+        source.events.each do |e|
+          if last
+            delta = e.date.to_time - last.date.to_time
 
-        k = Verokrypto::Koinly.new source
-        puts k.to_csv
+            e.date = (last.date.to_time + 1).to_datetime if delta <= 1
+          end
+
+          last = e
+        end
+
+        case source_name
+        when 'coinex:trades'
+          warn ''
+          warn 'fees'
+          Verokrypto::Helpers.print_pairs(source.fees)
+          warn ''
+          warn 'debits'
+          Verokrypto::Helpers.print_pairs(source.balance[:debits])
+          warn ''
+          warn 'credits'
+          Verokrypto::Helpers.print_pairs(source.balance[:credits])
+        when 'coinex:assets'
+          warn ''
+          warn 'deposits'
+          Verokrypto::Helpers.print_pairs(source.credits)
+          warn ''
+          warn 'withdraws'
+          Verokrypto::Helpers.print_pairs(source.debits)
+        end
+
+        puts Verokrypto::Koinly.events_to_csv(source.events)
       end
 
       private

@@ -3,8 +3,8 @@
 require 'digest'
 module Verokrypto
   class Event
-    attr_reader :id, :source, :date, :fee, :debit, :credit
-    attr_accessor :original
+    attr_reader :source, :date, :fee, :debit, :credit, :net_worth
+    attr_accessor :id, :original, :label, :description
 
     def initialize(source)
       @source = source
@@ -17,12 +17,15 @@ module Verokrypto
       raise 'not valid'
     end
 
-    def id=(obj)
-      @id = Digest::MD5.hexdigest obj.to_s
-    end
-
-    def date=(utc)
-      @date = DateTime.parse utc
+    def date=(string_or_datetime)
+      @date = case string_or_datetime.class.to_s
+              when 'String'
+                DateTime.parse string_or_datetime
+              when 'DateTime'
+                string_or_datetime
+              else
+                raise "unknown #{string_or_datetime.class}"
+              end
     end
 
     def fee=(pair)
@@ -35,6 +38,10 @@ module Verokrypto
 
     def credit=(pair)
       @credit = money_parse(pair)
+    end
+
+    def net_worth=(pair)
+      @net_worth = money_parse(pair)
     end
 
     private

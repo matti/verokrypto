@@ -2,6 +2,7 @@
 
 require 'debug'
 require 'rubyXL'
+require 'csv'
 module Verokrypto
   module Helpers
     def self.parse_xlsx(reader)
@@ -13,10 +14,22 @@ module Verokrypto
       [fields, rows]
     end
 
+    def self.parse_csv(reader)
+      CSV.read(reader)
+    end
+
     def self.print_pairs(pairs)
       pairs.each_pair do |currency, amount|
-        warn [currency.id, amount.format]
+        warn "#{currency.id}\t#{amount}"
       end
+    end
+
+    def self.valuefy(fields, row)
+      hash = {}
+      fields.each do |field|
+        hash[field] = row.shift
+      end
+      hash
     end
   end
 end

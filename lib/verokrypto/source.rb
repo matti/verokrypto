@@ -12,16 +12,29 @@ module Verokrypto
       currencies
     end
 
-    def balance
-      debits = {}
-      credits = {}
+    def debits
+      currencies = {}
       events.each do |e|
-        debits[e.debit.currency] ||= Money.from_amount(0, e.debit.currency)
-        debits[e.debit.currency] += e.debit
+        next unless e.debit
 
-        credits[e.credit.currency] ||= Money.from_amount(0, e.credit.currency)
-        credits[e.credit.currency] += e.credit
+        currencies[e.debit.currency] ||= Money.from_amount(0, e.debit.currency)
+        currencies[e.debit.currency] += e.debit
       end
+      currencies
+    end
+
+    def credits
+      currencies = {}
+      events.each do |e|
+        next unless e.credit
+
+        currencies[e.credit.currency] ||= Money.from_amount(0, e.credit.currency)
+        currencies[e.credit.currency] += e.credit
+      end
+      currencies
+    end
+
+    def balance
       {
         debits: debits,
         credits: credits
