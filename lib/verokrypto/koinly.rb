@@ -44,7 +44,6 @@ module Verokrypto
           'Date', 'Sent Amount', 'Sent Currency', 'Received Amount', 'Received Currency',
           'Fee Amount', 'Fee Currency', 'Net Worth Amount', 'Net Worth Currency', 'Label', 'Description', 'TxHash'
         ]
-
         events.each do |event|
           csv << [
             event.date,
@@ -59,7 +58,7 @@ module Verokrypto
             nil, # net worth amount
             nil, # net worth currency
 
-            nil, # label
+            event.label, # label
             nil, # description
 
             event.id

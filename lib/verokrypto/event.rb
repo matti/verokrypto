@@ -3,8 +3,8 @@
 require 'digest'
 module Verokrypto
   class Event
-    attr_reader :source, :date, :fee, :debit, :credit, :net_worth
-    attr_accessor :id, :original, :label, :description
+    attr_reader :source, :date, :fee, :debit, :credit, :net_worth, :label
+    attr_accessor :id, :original, :description
 
     def initialize(source)
       @source = source
@@ -42,6 +42,17 @@ module Verokrypto
 
     def net_worth=(pair)
       @net_worth = money_parse(pair)
+    end
+
+    def label=(string)
+      @label = case string
+               when nil
+                 nil
+               when 'mining'
+                 string
+               else
+                 raise "unknown label: #{string}"
+               end
     end
 
     private

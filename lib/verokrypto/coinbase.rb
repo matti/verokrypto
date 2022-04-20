@@ -12,9 +12,9 @@ module Verokrypto
 
     def self.from_csv(reader)
       fields, *rows = Verokrypto::Helpers.parse_csv(reader)
-      events = rows.map do |row|
+      events = rows.filter_map do |row|
         values = Verokrypto::Helpers.valuefy(fields, row)
-        e = Verokrypto::Event.new :coinex_asset
+        e = Verokrypto::Event.new :coinbase
 
         e.date = values.fetch 'Timestamp'
         case values.fetch('Transaction Type')
@@ -40,6 +40,7 @@ module Verokrypto
           ]
         when 'Sell', 'Receive', 'Convert'
           # TODO
+          next
         else
           raise 'wat'
         end

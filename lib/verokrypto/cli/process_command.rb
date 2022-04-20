@@ -18,6 +18,8 @@ module Verokrypto
                    Verokrypto::Coinbase.from_csv(reader)
                  when 'southxchange'
                    Verokrypto::Southxchange.from_csv(reader)
+                 when 'nicehash'
+                   Verokrypto::Nicehash.from_csv(reader)
                  else
                    raise "Unknown '#{source_name}'"
                  end
