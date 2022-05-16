@@ -18,6 +18,12 @@ module Verokrypto
     end
 
     def date=(string_or_datetime)
+      raise 'date already set' if @date
+
+      self.date_override = string_or_datetime
+    end
+
+    def date_override=(string_or_datetime)
       @date = case string_or_datetime.class.to_s
               when 'String'
                 DateTime.parse string_or_datetime
@@ -29,22 +35,32 @@ module Verokrypto
     end
 
     def fee=(pair)
+      raise 'fee already set' if @fee
+
       @fee = money_parse(pair)
     end
 
     def debit=(pair)
+      raise 'debit already set' if @debit
+
       @debit = money_parse(pair)
     end
 
     def credit=(pair)
+      raise 'credit already set' if @credit
+
       @credit = money_parse(pair)
     end
 
     def net_worth=(pair)
+      raise 'net_worth already set' if @net_worth
+
       @net_worth = money_parse(pair)
     end
 
     def label=(string)
+      raise 'label already set' if @label
+
       @label = case string
                when nil
                  nil

@@ -54,7 +54,13 @@ module Verokrypto
             'BTC'
           ]
           e.label = 'mining'
-        when 'Exchange fee', 'Hashpower mining fee', 'Withdrawal complete', 'Withdrawal fee'
+        when 'Withdrawal complete'
+          # amount matches with coinbase
+          e.debit = [
+            values.fetch('Amount (BTC)').gsub('-', ''),
+            'BTC'
+          ]
+        when 'Exchange fee', 'Hashpower mining fee', 'Withdrawal fee'
           # TODO
           next
         else

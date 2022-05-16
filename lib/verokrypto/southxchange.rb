@@ -9,10 +9,12 @@ module Verokrypto
     end
 
     def sort!
-      @events.sort! { |a, b| a.date <=> b.date }
+      # southxchange has same timestamps, so ruby sorting fucks up
+      # same timestamp increasing requires reverse order
+      @events.reverse!
     end
 
-    def self.from_csv(reader)
+    def self.from_csv(reader, csv_paths)
       fields, *rows = Verokrypto::Helpers.parse_csv(reader)
       events = rows.map do |row|
         values = Verokrypto::Helpers.valuefy(fields, row)
@@ -31,7 +33,36 @@ module Verokrypto
             values.fetch('Currency')
           ]
           e.id = values.fetch('Deposit_Hash')
-        when 'Fee', 'Trade'
+        when 'Trade'
+          trade_id = values.fetch('Trade_Id')
+
+          # other side, this file has no fees
+          next if values.fetch('Delta').start_with? '-'
+
+          e.credit = [
+            values.fetch('Delta'),
+            values.fetch('Currency')
+          ]
+
+          matches = csv_paths.map do |csv_path|
+            Verokrypto::Helpers.lookup_csv(csv_path, 'Trade_Id', trade_id)
+          end.flatten
+
+          matches.each do |match|
+            case match.fetch('Type')
+            when 'Trade'
+              e.debit = [
+                match.fetch('Delta'),
+                match.fetch('Currency')
+              ]
+            else
+              pp match
+              raise 'wat'
+            end
+          end
+
+          raise 'credit not set' unless e.credit
+        when 'Fee'
           # TODO..
           next
         else

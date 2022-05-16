@@ -6,18 +6,7 @@ module Verokrypto
       parameter 'PATH ...', 'path'
 
       def execute
-        headers = []
-        path_list.each do |path|
-          f = File.open(path)
-          headers << f.gets
-        ensure
-          f.close
-        end
-
-        if headers.uniq.size > 1
-          warn headers
-          raise 'not all headers same'
-        end
+        Verokrypto::Helpers.validate_csv_headers path_list
 
         events = path_list.map do |path|
           Verokrypto::Koinly.events_from_csv File.new path

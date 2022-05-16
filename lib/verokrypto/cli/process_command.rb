@@ -5,9 +5,14 @@ module Verokrypto
     class ProcessCommand < Clamp::Command
       parameter 'SOURCE_NAME', 'source'
       parameter 'PATH', 'path'
+      parameter '[CSV] ...', 'csv'
 
       def execute
         reader = wrap(path)
+        # do not self process (e2e southxchange)
+        csv_list.reject! do |csv|
+          csv == path
+        end
 
         source = case source_name
                  when 'coinex:trades'
@@ -17,7 +22,7 @@ module Verokrypto
                  when 'coinbase'
                    Verokrypto::Coinbase.from_csv(reader)
                  when 'southxchange'
-                   Verokrypto::Southxchange.from_csv(reader)
+                   Verokrypto::Southxchange.from_csv(reader, csv_list)
                  when 'nicehash'
                    Verokrypto::Nicehash.from_csv(reader)
                  else
@@ -30,7 +35,7 @@ module Verokrypto
         source.events.each do |e|
           if last
             delta = e.date.to_time - last.date.to_time
-            e.date = (last.date.to_time + 1).to_datetime if delta <= 1
+            e.date_override = (last.date.to_time + 1).to_datetime if delta <= 1
           end
 
           last = e

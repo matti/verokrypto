@@ -25,12 +25,19 @@ if [ -d ../vero ]; then
       csv_basename=${csv_path##*/}
       kind=${csv_basename%%-*}
       name=${csv_basename%%.*}
-
-      _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path"
+      case $name in
+        southxchange-*)
+          _verokrypto "$csvs/$source/$name.csv" process "$kind" $csv_path $source_path/*
+        ;;
+        *)
+          _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path"
+        ;;
+      esac
     done
 
     _verokrypto "$csvs/$source/merged.csv" csv $csvs/$source/*
     cp "$csvs/$source/merged.csv" $source.csv
+
     echo "$csvs/$source"
   done
 fi
