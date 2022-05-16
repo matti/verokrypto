@@ -26,7 +26,8 @@ https://www.coinex.com/asset/deposit/record
 
 https://www.coinex.com/asset/withdraw/record
 
-
 ### todo
 
 * no transcation id in trades as they are not in blockchain? (no md5)
+* southxchange trade fees (other way around?)
+* southxchange times vs koinly
