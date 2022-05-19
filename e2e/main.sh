@@ -3,7 +3,7 @@ set -euo pipefail
 
 _verokrypto() {
   output=$1
-  args=${@:2}
+  args=${*:2}
   if >"$output" exe/verokrypto $args; then
     echo "ok: exe/verokrypto $args"
   else
@@ -27,7 +27,7 @@ if [ -d ../vero ]; then
       name=${csv_basename%%.*}
       case $name in
         southxchange-*)
-          _verokrypto "$csvs/$source/$name.csv" process "$kind" $csv_path $source_path/*
+          _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path" $source_path/*
         ;;
         *)
           _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path"
@@ -36,7 +36,7 @@ if [ -d ../vero ]; then
     done
 
     _verokrypto "$csvs/$source/merged.csv" csv $csvs/$source/*
-    cp "$csvs/$source/merged.csv" $source.csv
+    cp "$csvs/$source/merged.csv" "$source.csv"
 
     echo "$csvs/$source"
   done
