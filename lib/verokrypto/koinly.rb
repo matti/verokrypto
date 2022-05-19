@@ -59,7 +59,7 @@ module Verokrypto
             nil, # net worth currency
 
             event.label, # label
-            nil, # description
+            event.description,
 
             event.id
           ]

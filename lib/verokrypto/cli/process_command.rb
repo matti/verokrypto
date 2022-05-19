@@ -25,6 +25,8 @@ module Verokrypto
                    Verokrypto::Southxchange.from_csv(reader, csv_list)
                  when 'nicehash'
                    Verokrypto::Nicehash.from_csv(reader)
+                 when 'raptoreum'
+                   Verokrypto::Raptoreum.from_csv(reader)
                  else
                    raise "Unknown '#{source_name}'"
                  end
