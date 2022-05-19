@@ -64,7 +64,7 @@ module Verokrypto
       @label = case string
                when nil
                  nil
-               when 'mining', 'cost', 'reward'
+               when 'mining', 'cost', 'reward', 'gift', 'stake', 'unstake'
                  string
                else
                  raise "unknown label: #{string}"

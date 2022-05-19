@@ -5,13 +5,13 @@ module Verokrypto
     class ProcessCommand < Clamp::Command
       parameter 'SOURCE_NAME', 'source'
       parameter 'PATH', 'path'
-      parameter '[CSV] ...', 'csv'
+      parameter '[EXTRA] ...', 'extras'
 
       def execute
         reader = wrap(path)
         # do not self process (e2e southxchange)
-        csv_list.reject! do |csv|
-          csv == path
+        extra_list.reject! do |extra|
+          extra == path
         end
 
         source = case source_name
@@ -22,11 +22,11 @@ module Verokrypto
                  when 'coinbase'
                    Verokrypto::Coinbase.from_csv(reader)
                  when 'southxchange'
-                   Verokrypto::Southxchange.from_csv(reader, csv_list)
+                   Verokrypto::Southxchange.from_csv(reader, extra_list)
                  when 'nicehash'
                    Verokrypto::Nicehash.from_csv(reader)
                  when 'raptoreum'
-                   Verokrypto::Raptoreum.from_csv(reader)
+                   Verokrypto::Raptoreum.from_csv(reader, extra_list)
                  else
                    raise "Unknown '#{source_name}'"
                  end
