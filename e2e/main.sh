@@ -25,7 +25,14 @@ if [ -d ../vero ]; then
       csv_basename=${csv_path##*/}
       kind=${csv_basename%%-*}
       name=${csv_basename%%.*}
+
       case $name in
+        yaml-*)
+
+        ;;
+        raptoreum-*)
+          _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path" $source_path/yaml-received.yaml $source_path/yaml-sent.yaml
+        ;;
         southxchange-*)
           _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path" $source_path/*
         ;;
