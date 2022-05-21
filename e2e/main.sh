@@ -28,7 +28,7 @@ if [ -d ../vero ]; then
 
       case $name in
         yaml-*)
-
+          # nop
         ;;
         raptoreum-*)
           _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path" $source_path/yaml-received.yaml $source_path/yaml-sent.yaml
