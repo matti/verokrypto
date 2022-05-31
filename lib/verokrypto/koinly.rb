@@ -3,12 +3,18 @@
 require 'csv'
 
 module Verokrypto
-  module Koinly
-    def self.events_from_csv(reader)
+  class Koinly < Source
+    def initialize(events)
+      super()
+      @events = events
+    end
+
+    def sort!; end
+
+    def self.from_csv(reader)
       fields, *rows = Verokrypto::Helpers.parse_csv(reader)
 
-      events = []
-      rows.each do |row|
+      events = rows.filter_map do |row|
         values = Verokrypto::Helpers.valuefy(fields, row)
         e = Verokrypto::Event.new :koinly
         e.id = values.fetch('TxHash')
@@ -32,13 +38,13 @@ module Verokrypto
         e.label = values.fetch('Label')
         e.description = values.fetch('Description')
 
-        events << e
+        e
       end
 
-      events
+      new events
     end
 
-    def self.events_to_csv(events)
+    def self.to_csv(events)
       CSV.generate do |csv|
         csv << [
           'Date', 'Sent Amount', 'Sent Currency', 'Received Amount', 'Received Currency',
@@ -55,10 +61,10 @@ module Verokrypto
             event.fee,
             event.fee&.currency&.id,
 
-            nil, # net worth amount
-            nil, # net worth currency
+            event.net_worth&.to_f,
+            event.net_worth&.currency&.id,
 
-            event.label, # label
+            event.label,
             event.description,
 
             event.id

@@ -25,6 +25,8 @@ require_relative 'verokrypto/coinbase'
 require_relative 'verokrypto/southxchange'
 require_relative 'verokrypto/nicehash'
 require_relative 'verokrypto/raptoreum'
+require_relative 'verokrypto/inodez'
+require_relative 'verokrypto/cryptocom'
 
 module Verokrypto
   class Error < StandardError; end

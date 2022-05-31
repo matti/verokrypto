@@ -22,6 +22,7 @@ module Verokrypto
         next if values['Date time'] == '∑'
 
         e.date = values.fetch 'Date time'
+        e.description = values.fetch('Purpose')
 
         case values.fetch('Purpose')
         when 'Exchange trade'
@@ -40,7 +41,7 @@ module Verokrypto
             ]
 
             e.debit = [
-              values.fetch("Amount (#{currency})").gsub('-', ''),
+              values.fetch("Amount (#{currency})").sub('-', ''),
               currency
             ]
           else
@@ -48,16 +49,14 @@ module Verokrypto
             next
           end
         when 'Hashpower mining'
-          # TODO
           e.credit = [
             values.fetch('Amount (BTC)'),
             'BTC'
           ]
           e.label = 'mining'
         when 'Withdrawal complete'
-          # amount matches with coinbase
           e.debit = [
-            values.fetch('Amount (BTC)').gsub('-', ''),
+            values.fetch('Amount (BTC)').sub('-', ''),
             'BTC'
           ]
         when 'Exchange fee', 'Hashpower mining fee', 'Withdrawal fee'
@@ -73,35 +72,5 @@ module Verokrypto
 
       new events
     end
-
-    # def self.events_to_csv(events)
-    #   CSV.generate do |csv|
-    #     csv << [
-    #       'Date', 'Sent Amount', 'Sent Currency', 'Received Amount', 'Received Currency',
-    #       'Fee Amount', 'Fee Currency', 'Net Worth Amount', 'Net Worth Currency', 'Label', 'Description', 'TxHash'
-    #     ]
-
-    #     events.each do |event|
-    #       csv << [
-    #         event.date,
-    #         event.debit,
-    #         event.debit&.currency&.id,
-    #         event.credit,
-    #         event.credit&.currency&.id,
-
-    #         event.fee,
-    #         event.fee&.currency&.id,
-
-    #         nil, # net worth amount
-    #         nil, # net worth currency
-
-    #         nil, # label
-    #         nil, # description
-
-    #         event.id
-    #       ]
-    #     end
-    #   end
-    # end
   end
 end

@@ -27,11 +27,14 @@ if [ -d ../vero ]; then
       name=${csv_basename%%.*}
 
       case $name in
+        prices-*)
+          # nop
+        ;;
         yaml-*)
           # nop
         ;;
         raptoreum-*)
-          _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path" $source_path/yaml-received.yaml $source_path/yaml-sent.yaml
+          _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path" $source_path/yaml-received.yaml $source_path/yaml-sent.yaml $source_path/prices-missing.csv
         ;;
         southxchange-*)
           _verokrypto "$csvs/$source/$name.csv" process "$kind" "$csv_path" $source_path/*

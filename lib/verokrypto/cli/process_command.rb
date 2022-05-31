@@ -26,7 +26,13 @@ module Verokrypto
                  when 'nicehash'
                    Verokrypto::Nicehash.from_csv(reader)
                  when 'raptoreum'
-                   Verokrypto::Raptoreum.from_csv(reader, extra_list)
+                   Verokrypto::Raptoreum.from_csv(reader, extra_list[0], extra_list[1], extra_list[2])
+                 when 'inodez'
+                   Verokrypto::Inodez.from_csv(reader)
+                 when 'cryptocom'
+                   Verokrypto::Cryptocom.from_csv(reader)
+                 when 'koinly'
+                   Verokrypto::Koinly.from_csv(reader)
                  else
                    raise "Unknown '#{source_name}'"
                  end
@@ -63,7 +69,9 @@ module Verokrypto
           Verokrypto::Helpers.print_pairs(source.debits)
         end
 
-        puts Verokrypto::Koinly.events_to_csv(source.events)
+        puts Verokrypto::Koinly.to_csv(source.events)
+
+        warn 'events: ' + source.events.size.to_s
       end
 
       private

@@ -16,15 +16,33 @@ gem install verokrypto
 verokrypto process coinex execution-history.xlsx
 ```
 
+### check all
+
+* time utc
+* times in correct order
+* rows count match
+* price available
+* highest gains
+
+### coinbase
+
+* eth mining labeled correctly?
+
+### koinly problems
+
+* randomly sorts events with same second and does not support milliseconds
+* if amount "0.0" then just silently ignores in import
+* csv supports labels like stake and unstake, but those are silently ignored in import
+
 ### coinex
 
 coinex has no milliseconds
 
-https://www.coinex.com/exchange/record
+<https://www.coinex.com/exchange/record>
 
-https://www.coinex.com/asset/deposit/record
+<https://www.coinex.com/asset/deposit/record>
 
-https://www.coinex.com/asset/withdraw/record
+<https://www.coinex.com/asset/withdraw/record>
 
 ### todo
 

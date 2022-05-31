@@ -52,6 +52,10 @@ module Verokrypto
       @credit = money_parse(pair)
     end
 
+    def credit_money=(money)
+      @credit = money
+    end
+
     def net_worth=(pair)
       raise 'net_worth already set' if @net_worth
 
@@ -75,6 +79,9 @@ module Verokrypto
 
     def money_parse(pair)
       amount_string, currency = pair
+      return if amount_string.nil?
+      raise 'currency nil' if currency.nil?
+
       Money.from_amount(amount_string.to_f, currency)
     rescue Money::Currency::UnknownCurrency
       ::Money::Currency.register({

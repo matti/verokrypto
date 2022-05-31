@@ -41,6 +41,7 @@ module Verokrypto
             values.fetch('Coin')
           ]
         end
+
         events << e
       end
 

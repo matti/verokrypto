@@ -9,17 +9,12 @@ module Verokrypto
         Verokrypto::Helpers.validate_csv_headers path_list
 
         events = path_list.map do |path|
-          Verokrypto::Koinly.events_from_csv File.new path
+          Verokrypto::Koinly.from_csv(File.new(path)).events
         end.flatten
-
-        # unless events.size == events.map(&:id).uniq.size
-        #   pp [:events, events.size, :vs, :uniq, events.map(&:id).uniq.size]
-        #   raise 'not all uniq'
-        # end
 
         events.sort! { |a, b| a.date <=> b.date }
 
-        puts Verokrypto::Koinly.events_to_csv(events)
+        puts Verokrypto::Koinly.to_csv(events)
       end
     end
   end
