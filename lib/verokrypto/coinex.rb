@@ -30,12 +30,16 @@ module Verokrypto
 
         if values['Withdrawal time']
           e.date = values.fetch('Withdrawal time')
+          # dates are +3h, so -3h
+          e.date_override = e.date - (3.0 / 24)
           e.debit = [
             values.fetch('Amount'),
             values.fetch('Coin')
           ]
         else
           e.date = values.fetch('Deposit time')
+          # dates are +3h, so -3h
+          e.date_override = e.date - (3.0 / 24)
           e.credit = [
             values.fetch('Amount'),
             values.fetch('Coin')

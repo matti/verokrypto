@@ -16,10 +16,9 @@ module Verokrypto
         #   from.push autofill_event
         # end
 
-        pp [:f, from]
-        pp [:available,
-            from.map(&:credit).map(&:to_f).sum, from.first.credit.currency.id,
-            event.debit.to_f, event.debit.currency.id]
+        # pp [:available,
+        #     from.map(&:credit).map(&:to_f).sum, from.first.credit.currency.id,
+        #     event.debit.to_f, event.debit.currency.id]
 
         after = []
         remaining = event.debit
@@ -54,7 +53,7 @@ module Verokrypto
         Verokrypto::Helpers.validate_csv_headers path_list
 
         events = path_list.map do |path|
-          Verokrypto::Koinly.from_csv File.new path
+          Verokrypto::Koinly.from_csv(File.new(path)).events
         end.flatten
 
         pp [:events, events.size]
@@ -76,39 +75,39 @@ module Verokrypto
           fifo[e.credit.currency.id] ||= [] if e.credit
 
           if e.debit && e.credit
-            pp [:trade, :pre,
-                e.date,
-                e.debit.to_f, e.debit.currency.id,
-                e.credit.to_f, e.credit.currency.id,
-                e.description,
-                fifo[e.credit.currency.id].map(&:credit).map(&:to_f).sum]
+            # pp [:trade, :pre,
+            #     e.date,
+            #     e.debit.to_f, e.debit.currency.id,
+            #     e.credit.to_f, e.credit.currency.id,
+            #     e.description,
+            #     fifo[e.credit.currency.id].map(&:credit).map(&:to_f).sum]
 
             fifo[e.debit.currency.id] = take fifo[e.debit.currency.id], e
             fifo[e.credit.currency.id].push e
 
-            pp [:trade, :post,
-                e.date,
-                e.debit.to_f, e.debit.currency.id,
-                e.credit.to_f, e.credit.currency.id,
-                e.description,
-                fifo[e.credit.currency.id].map(&:credit).map(&:to_f).sum]
+            # pp [:trade, :post,
+            #     e.date,
+            #     e.debit.to_f, e.debit.currency.id,
+            #     e.credit.to_f, e.credit.currency.id,
+            #     e.description,
+            #     fifo[e.credit.currency.id].map(&:credit).map(&:to_f).sum]
           elsif e.debit && e.credit.nil?
-            pp [:withdraw,
-                e.date,
-                e.debit.to_f, e.debit.currency.id,
-                e.label, e.description,
-                fifo[e.debit.currency.id].map(&:credit).map(&:to_f).sum]
+            # pp [:withdraw,
+            #     e.date,
+            #     e.debit.to_f, e.debit.currency.id,
+            #     e.label, e.description,
+            #     fifo[e.debit.currency.id].map(&:credit).map(&:to_f).sum]
             fifo[e.debit.currency.id] = take fifo[e.debit.currency.id], e
           else
             fifo[e.credit.currency.id].push e
 
-            pp [
-              :deposit,
-              e.date,
-              e.credit.to_f, e.credit.currency.id,
-              e.label, e.description,
-              fifo[e.credit.currency.id].map(&:credit).map(&:to_f).sum
-            ]
+            # pp [
+            #   :deposit,
+            #   e.date,
+            #   e.credit.to_f, e.credit.currency.id,
+            #   e.label, e.description,
+            #   fifo[e.credit.currency.id].map(&:credit).map(&:to_f).sum
+            # ]
           end
         end
 
