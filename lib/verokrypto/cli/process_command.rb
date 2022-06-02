@@ -31,6 +31,12 @@ module Verokrypto
                    Verokrypto::Inodez.from_csv(reader)
                  when 'cryptocom'
                    Verokrypto::Cryptocom.from_csv(reader)
+                 when 'tradeogre:withdrawals'
+                   Verokrypto::Tradeogre.withdrawals_from_csv(reader)
+                 when 'tradeogre:deposits'
+                   Verokrypto::Tradeogre.deposits_from_csv(reader)
+                 when 'tradeogre:trades'
+                   Verokrypto::Tradeogre.trades_from_csv(reader)
                  when 'koinly'
                    Verokrypto::Koinly.from_csv(reader)
                  else

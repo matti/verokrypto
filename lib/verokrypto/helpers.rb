@@ -31,7 +31,9 @@ module Verokrypto
       end
 
       if headers.uniq.size > 1
-        warn headers
+        headers.each do |header|
+          pp [:header, header]
+        end
         raise 'not all headers same'
       end
 
