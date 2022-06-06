@@ -3,6 +3,7 @@
 require_relative 'process_command'
 require_relative 'csv_command'
 require_relative 'stats_command'
+require_relative 'hmo_command'
 
 module Verokrypto
   module Cli
@@ -20,6 +21,7 @@ module Verokrypto
       subcommand ['process'], 'Process', Verokrypto::Cli::ProcessCommand
       subcommand ['csv'], 'CSV', Verokrypto::Cli::CsvCommand
       subcommand ['stats'], 'Stats', Verokrypto::Cli::StatsCommand
+      subcommand ['hmo'], 'Hmo', Verokrypto::Cli::HmoCommand
     end
   end
 end

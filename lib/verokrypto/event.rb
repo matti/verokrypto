@@ -17,6 +17,12 @@ module Verokrypto
       raise 'not valid'
     end
 
+    def ==(other)
+      credit == other.credit &&
+        date == other.date &&
+        debit == other.debit
+    end
+
     def date=(string_or_datetime)
       raise 'date already set' if @date
 
