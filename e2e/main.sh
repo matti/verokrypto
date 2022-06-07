@@ -27,9 +27,6 @@ if [ -d ../vero ]; then
       name=${csv_basename%%.*}
 
       case $name in
-        hmo)
-          # nop
-        ;;
         prices-*)
           # nop
         ;;
@@ -50,8 +47,8 @@ if [ -d ../vero ]; then
 
     _verokrypto "$csvs/$source/merged.csv" csv $csvs/$source/*
 
-    if [[ -f "$source_path/hmo.csv" ]]; then
-      _verokrypto "$csvs/$source/merged-hmo.csv" hmo "$csvs/$source/merged.csv" "$source_path/hmo.csv"
+    if [[ -f "$source_path/.hmo.csv" ]]; then
+      _verokrypto "$csvs/$source/merged-hmo.csv" hmo "$csvs/$source/merged.csv" "$source_path/.hmo.csv"
       cp "$csvs/$source/merged-hmo.csv" "$source.csv"
     else
       cp "$csvs/$source/merged.csv" "$source.csv"

@@ -46,6 +46,10 @@ module Verokrypto
       @fee = money_parse(pair)
     end
 
+    def fee_remove!
+      @fee = nil
+    end
+
     def debit=(pair)
       raise 'debit already set' if @debit
 
