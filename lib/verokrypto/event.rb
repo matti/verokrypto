@@ -66,6 +66,10 @@ module Verokrypto
       @credit = money
     end
 
+    def debit_money=(money)
+      @debit = money
+    end
+
     def net_worth=(pair)
       raise 'net_worth already set' if @net_worth
 

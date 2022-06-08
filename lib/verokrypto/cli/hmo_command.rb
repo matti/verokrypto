@@ -11,25 +11,39 @@ module Verokrypto
         koinly_hmo = Verokrypto::Koinly.from_csv(File.new(hmo_path))
 
         adjusted_events = koinly_events.events.filter_map do |event|
-          adjusted_net_worth = nil
+          event_hmo = nil
           koinly_hmo.events.each do |hmo_event|
             next unless event == hmo_event
 
-            worth, cost_basis = hmo_event.description.split
-            adjusted_net_worth = worth.to_f - (worth.to_f * 0.20) + cost_basis.to_f
+            event_hmo = hmo_event
             break
           end
 
-          if adjusted_net_worth
-            event.net_worth = [
-              adjusted_net_worth,
-              'eur'
-            ]
-            event.fee_remove!
-          end
+          if event_hmo
+            worth, cost_basis = event_hmo.description.split
 
-          event
-        end
+            event_sell = Verokrypto::Event.new :hmo
+            event_buy = Verokrypto::Event.new :hmo
+
+            event_sell.date = event.date
+            event_buy.date = (event_sell.date.to_time + 1).to_datetime
+
+            event_sell.debit_money = event.debit
+            event_sell.credit = [
+              worth.to_f - (worth.to_f * 0.20) + cost_basis.to_f,
+              :eur
+            ]
+            event_buy.debit = [
+              worth.to_f,
+              :eur
+            ]
+            event_buy.credit_money = event.credit
+
+            [event_sell, event_buy]
+          else
+            [event]
+          end
+        end.flatten
 
         puts Verokrypto::Koinly.to_csv(adjusted_events)
       end

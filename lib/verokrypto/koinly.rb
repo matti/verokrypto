@@ -9,7 +9,9 @@ module Verokrypto
       @events = events
     end
 
-    def sort!; end
+    def sort!
+      @events.sort! { |a, b| a.date <=> b.date }
+    end
 
     def self.from_csv(reader)
       fields, *rows = Verokrypto::Helpers.parse_csv(reader)
