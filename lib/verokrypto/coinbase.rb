@@ -83,6 +83,11 @@ module Verokrypto
             values.fetch('Quantity Transacted'),
             values.fetch('Asset')
           ]
+        when 'Learning Reward'
+          e.credit = [
+            values.fetch('Quantity Transacted'),
+            values.fetch('Asset')
+          ]
         else
           pp e
           raise 'wat'
