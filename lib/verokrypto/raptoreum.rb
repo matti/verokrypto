@@ -9,7 +9,9 @@ module Verokrypto
       @events = events
     end
 
-    def sort!; end
+    def sort!
+      @events.reverse!
+    end
 
     def self.from_csv(reader, received_labels_path, sent_labels_path, prices_path)
       received_labels = YAML.safe_load(File.read(received_labels_path))
