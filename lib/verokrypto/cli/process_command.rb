@@ -45,32 +45,14 @@ module Verokrypto
 
         source.sort!
 
-        previous = nil
-        first_overridden_date = nil
-        original_delta = nil
-        # olettaa järjestyksen
-        # lisää +1 sekunti jos edellinen timestamp oli sama
+        last = nil
         source.events.each do |e|
-          if previous
-            # Compare current event - previous event's possibly overriden date
-            new_delta = e.date.to_time - previous.date.to_time
-
-            if first_overridden_date
-              # Compare current event - first overriden date
-              original_delta = e.date.to_time - first_overridden_date
-            end
-
-            if (new_delta >= -1 && new_delta <= 1) || (original_delta && original_delta >= -1 && original_delta <= 1)
-              e.date_override = (previous.date.to_time + 1).to_datetime
-              if first_overridden_date.nil?
-                first_overridden_date = e.date.to_time
-              end
-            else
-              first_overridden_date = nil
-            end
+          if last
+            delta = e.date.to_time - last.date.to_time
+            e.date_override = (last.date.to_time + 1).to_datetime if delta <= 1
           end
 
-          previous = e
+          last = e
         end
 
         case source_name
