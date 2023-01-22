@@ -77,11 +77,38 @@ _raptoreum_main() {
   ;
 }
 
+_tradeogre() {
+  local wallet_name="tradeogre"
+  local tempdir; tempdir="$(mktemp -d)"
+
+  local deposits_temp_path="${tempdir}/${wallet_name}-deposits.csv"
+  local trades_temp_path="${tempdir}/${wallet_name}-trades.csv"
+  local withdrawals_temp_path="${tempdir}/${wallet_name}-withdrawals.csv"
+  local merged_temp_path="${tempdir}/${wallet_name}.csv"
+
+  local deposits_path="${BASE_DATA}/tradeogre/export_deposits.csv"
+  local trades_path="${BASE_DATA}/tradeogre/export_trades.csv"
+  local withdrawals_path="${BASE_DATA}/tradeogre/export_withdrawals.csv"
+
+  _out "${wallet_name}"
+
+  _verokrypto process "tradeogre:deposits" "${deposits_path}" | _tee "${deposits_temp_path}"
+  _verokrypto process "tradeogre:trades" "${trades_path}" | _tee "${trades_temp_path}"
+  _verokrypto process "tradeogre:withdrawals" "${withdrawals_path}" | _tee "${withdrawals_temp_path}"
+
+  # merge
+  _verokrypto csv "${deposits_temp_path}" "${trades_temp_path}" "${withdrawals_temp_path}" | tee "${merged_temp_path}"
+
+  mv -v "${tempdir}"/*.csv "${KOINLY_DATA_PATH}"
+}
+
 _raptoreum_main
 
 _process coinbase \
   ${BASE_DATA}/coinbase/"Coinbase-559bd29d66363615790000aa-TransactionsHistoryReport-2023-01-06-10-16-15.csv" \
 ;
+
+_tradeogre
 
 _southxchange
 

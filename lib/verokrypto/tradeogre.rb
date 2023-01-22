@@ -10,7 +10,14 @@ module Verokrypto
     end
 
     def sort!
-      @events.reverse!
+      case self.name
+      when 'tradeogre:trades'
+        nil
+      when 'tradeogre:deposits'
+        @events.reverse!
+      when 'tradeogre:withdrawals'
+        @events.reverse!
+      end
     end
 
     def self.deposits_from_csv(reader)
@@ -65,6 +72,7 @@ module Verokrypto
 
         e.date = values.fetch('Date')
         case values.fetch('Type')
+        # BUY,BTC-RTM
         when 'BUY'
           from_currency, to_currency = values.fetch('Exchange').split('-')
           # TODO: Money + wat
@@ -80,6 +88,23 @@ module Verokrypto
           e.fee = [
             values.fetch('Fee'),
             to_currency
+          ]
+        # SELL,BTC-RTM
+        when 'SELL'
+          to_currency, from_currency = values.fetch('Exchange').split('-')
+          # TODO: Money + wat
+          e.debit = [
+            values.fetch('Amount'),
+            from_currency
+          ]
+          e.credit = [
+            values.fetch('Amount').to_f * values.fetch('Price').to_f,
+            to_currency
+          ]
+          # TODO: also wat
+          e.fee = [
+            values.fetch('Fee'),
+            from_currency
           ]
         else
           pp values

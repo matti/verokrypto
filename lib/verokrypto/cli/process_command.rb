@@ -43,12 +43,14 @@ module Verokrypto
                    raise "Unknown '#{source_name}'"
                  end
 
+        source.name = source_name
         source.sort!
 
         last = nil
         source.events.each do |e|
           if last
             delta = e.date.to_time - last.date.to_time
+
             e.date_override = (last.date.to_time + 1).to_datetime if delta <= 1
           end
 
