@@ -105,7 +105,7 @@ _tradeogre() {
 _raptoreum_main
 
 _process coinbase \
-  ${BASE_DATA}/coinbase/"Coinbase-559bd29d66363615790000aa-TransactionsHistoryReport-2023-01-06-10-16-15.csv" \
+  ${BASE_DATA}/coinbase/"2023-01-06-coinbase.csv" \
 ;
 
 _tradeogre

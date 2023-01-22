@@ -20,6 +20,12 @@ module Verokrypto
       end
     end
 
+    # Tradeogre timestamps are -4 hours from UTC
+    # Add 4 hours to a DateTime timestamp get UTC
+    def self.timezone_offset_hours
+      4.0/24
+    end
+
     def self.deposits_from_csv(reader)
       fields, *rows = Verokrypto::Helpers.parse_csv(reader)
       events = rows.filter_map do |row|
@@ -27,6 +33,8 @@ module Verokrypto
         e = Verokrypto::Event.new :tradeogre
 
         e.date = values.fetch('Date')
+        e.date_override = e.date + timezone_offset_hours
+
         e.id = values.fetch('TXID')
 
         e.credit = [
@@ -46,6 +54,7 @@ module Verokrypto
         e = Verokrypto::Event.new :tradeogre
 
         e.date = values.fetch('Date')
+        e.date_override = e.date + timezone_offset_hours
         e.id = values.fetch('TXID')
 
         # TODO: money
@@ -71,6 +80,8 @@ module Verokrypto
         e = Verokrypto::Event.new :tradeogre
 
         e.date = values.fetch('Date')
+        e.date_override = e.date + timezone_offset_hours
+
         case values.fetch('Type')
         # BUY,BTC-RTM
         when 'BUY'
