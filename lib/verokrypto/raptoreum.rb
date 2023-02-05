@@ -63,23 +63,23 @@ module Verokrypto
           raise 'wat'
         end
 
-        # TODO: copy/pasta in southxchange
-        _, *prices_rows = Verokrypto::Helpers.parse_csv(File.open(prices_path))
-        prices = prices_rows.to_h do |pair|
-          [pair.first, pair.last.to_f]
-        end
+        # # TODO: copy/pasta in southxchange
+        # _, *prices_rows = Verokrypto::Helpers.parse_csv(File.open(prices_path))
+        # prices = prices_rows.to_h do |pair|
+        #   [pair.first, pair.last.to_f]
+        # end
 
-        # koinly has no raptoreum price data before this
-        if e.date < DateTime.new(2021, 9, 21, 17, 0)
-          price = prices[e.date.strftime('%Y-%m-%d')]
-          raise 'no price' unless price
+        # # koinly has no raptoreum price data before this
+        # if e.date < DateTime.new(2021, 9, 21, 17, 0)
+        #   price = prices[e.date.strftime('%Y-%m-%d')]
+        #   raise 'no price' unless price
 
-          e.net_worth = if e.credit
-                          [e.credit.to_f * price, 'EUR']
-                        else
-                          [e.debit.to_f * price, 'EUR']
-                        end
-        end
+        #   e.net_worth = if e.credit
+        #                   [e.credit.to_f * price, 'EUR']
+        #                 else
+        #                   [e.debit.to_f * price, 'EUR']
+        #                 end
+        # end
 
         if e.label == 'mining' && e.description == '' && e.credit.to_f > 500
           pp e
