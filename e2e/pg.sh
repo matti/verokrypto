@@ -96,6 +96,24 @@ _raptoreum_inodez() {
   ;
 }
 
+_raptoreum_kika2() {
+  _process raptoreum raptoreum-kika2 \
+    "${BASE_DATA}"/raptoreum-kika2/rtm-wallet-kika2.csv \
+    "${BASE_DATA}"/raptoreum-kika2/labels-received.yaml \
+    "${BASE_DATA}"/raptoreum-kika2/labels-sent.yaml \
+    "${BASE_DATA}"/raptoreum-kika2/prices-missing.csv \
+  ;
+}
+
+_raptoreum_paulus() {
+  _process raptoreum raptoreum-paulus \
+    "${BASE_DATA}"/raptoreum-paulus/rtm-wallet-paulus.csv \
+    "${BASE_DATA}"/raptoreum-paulus/labels-received.yaml \
+    "${BASE_DATA}"/raptoreum-paulus/labels-sent.yaml \
+    "${BASE_DATA}"/raptoreum-paulus/prices-missing.csv \
+  ;
+}
+
 _tradeogre() {
   local wallet_name="tradeogre"
   local tempdir; tempdir="$(mktemp -d)"
@@ -126,6 +144,10 @@ _raptoreum_main
 _raptoreum_mafianode
 
 _raptoreum_inodez
+
+_raptoreum_kika2
+
+_raptoreum_paulus
 
 _process coinbase coinbase \
   ${BASE_DATA}/coinbase/"2023-01-06-coinbase.csv" \

@@ -81,7 +81,7 @@ module Verokrypto
         #                 end
         # end
 
-        if e.label == 'mining' && e.description == '' && e.credit.to_f > 500
+        if e.label == 'mining' && e.description == '' && e.credit.to_f > 600
           pp e
           raise 'too big for mining'
         end
