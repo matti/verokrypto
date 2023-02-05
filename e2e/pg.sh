@@ -116,7 +116,7 @@ _tradeogre() {
   _verokrypto process "tradeogre:withdrawals" "${withdrawals_path}" | _tee "${withdrawals_temp_path}"
 
   # merge
-  _verokrypto csv "${deposits_temp_path}" "${trades_temp_path}" "${withdrawals_temp_path}" | tee "${merged_temp_path}"
+  _verokrypto csv "${deposits_temp_path}" "${trades_temp_path}" "${withdrawals_temp_path}" | _tee "${merged_temp_path}"
 
   mv -v "${tempdir}"/*.csv "${KOINLY_DATA_PATH}"
 }
