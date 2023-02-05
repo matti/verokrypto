@@ -29,16 +29,17 @@ _verodata_status() {
 }
 
 _process() {
-  local wallet_name="$1"
-  local source_file_paths=("${@:2}")
+  local source_name="$1"
+  local wallet_name="$2"
+  local source_file_paths=("${@:3}")
   local tempdir; tempdir="$(mktemp -d)"
 
-  local csv_temp_file="${tempdir}/${wallet_name}.csv"
+  local csv_temp_file="${tempdir}/${source_name}-${wallet_name}.csv"
   local koinly_csv_file="${KOINLY_DATA_PATH}/${wallet_name}.csv"
 
   _out "${koinly_csv_file}"
 
-  _verokrypto process "${wallet_name}" "${source_file_paths[@]}" | _tee "${csv_temp_file}"
+  _verokrypto process "${source_name}" "${source_file_paths[@]}" | _tee "${csv_temp_file}"
 
   mv -v "${csv_temp_file}" "${koinly_csv_file}"
 }
@@ -69,11 +70,29 @@ _southxchange() {
 }
 
 _raptoreum_main() {
-  _process raptoreum \
-    "${BASE_DATA}"/raptoreum/rtm-wallet-main.csv \
-    "${BASE_DATA}"/raptoreum/labels-received.yaml \
-    "${BASE_DATA}"/raptoreum/labels-sent.yaml \
-    "${BASE_DATA}"/raptoreum/prices-missing.csv \
+  _process raptoreum raptoreum-main \
+    "${BASE_DATA}"/raptoreum-main/rtm-wallet-main.csv \
+    "${BASE_DATA}"/raptoreum-main/labels-received.yaml \
+    "${BASE_DATA}"/raptoreum-main/labels-sent.yaml \
+    "${BASE_DATA}"/raptoreum-main/prices-missing.csv \
+  ;
+}
+
+_raptoreum_mafianode() {
+  _process raptoreum raptoreum-mafianode \
+    "${BASE_DATA}"/raptoreum-mafianode/mafianode-export.csv \
+    "${BASE_DATA}"/raptoreum-mafianode/labels-received.yaml \
+    "${BASE_DATA}"/raptoreum-mafianode/labels-sent.yaml \
+    "${BASE_DATA}"/raptoreum-mafianode/prices-missing.csv \
+  ;
+}
+
+_raptoreum_inodez() {
+  _process raptoreum raptoreum-inodez \
+    "${BASE_DATA}"/raptoreum-inodez/inodez-constructed.csv \
+    "${BASE_DATA}"/raptoreum-inodez/labels-received.yaml \
+    "${BASE_DATA}"/raptoreum-inodez/labels-sent.yaml \
+    "${BASE_DATA}"/raptoreum-inodez/prices-missing.csv \
   ;
 }
 
@@ -104,7 +123,11 @@ _tradeogre() {
 
 _raptoreum_main
 
-_process coinbase \
+_raptoreum_mafianode
+
+_raptoreum_inodez
+
+_process coinbase coinbase \
   ${BASE_DATA}/coinbase/"2023-01-06-coinbase.csv" \
 ;
 
