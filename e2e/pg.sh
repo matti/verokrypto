@@ -118,6 +118,10 @@ _coinex() {
   _process coinex-csv coinex "${BASE_DATA}"/coinex/coinex-mafianode-oma-kolmasosa.csv
 }
 
+_cryptocom() {
+  _process cryptocom cryptocom "${BASE_DATA}"/cryptocom/petafox_crypto_transactions_20230106.csv
+}
+
 _tradeogre() {
   local wallet_name="tradeogre"
   local tempdir; tempdir="$(mktemp -d)"
@@ -162,6 +166,8 @@ _coinex
 _tradeogre
 
 _southxchange
+
+_cryptocom
 
 _verodata_status
 
