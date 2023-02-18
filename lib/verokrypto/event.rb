@@ -6,8 +6,9 @@ module Verokrypto
     attr_reader :source, :date, :fee, :debit, :credit, :net_worth, :label
     attr_accessor :id, :original, :description
 
-    def initialize(source, date: nil, fee: nil, debit: nil, credit: nil, net_worth: nil, label: nil)
+    def initialize(source, id: nil, date: nil, fee: nil, debit: nil, credit: nil, net_worth: nil, label: nil)
       @source = source
+      @id = id
       self.date = date if date
       self.fee = fee if fee
       self.debit = debit if debit

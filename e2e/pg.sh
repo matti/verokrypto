@@ -122,6 +122,9 @@ _cryptocom() {
   _process cryptocom cryptocom "${BASE_DATA}"/cryptocom/petafox_crypto_transactions_20230106.csv
 }
 
+_kraken() {
+  _process kraken kraken "${BASE_DATA}"/kraken/ledgers.csv
+}
 _tradeogre() {
   local wallet_name="tradeogre"
   local tempdir; tempdir="$(mktemp -d)"
@@ -168,6 +171,8 @@ _tradeogre
 _southxchange
 
 _cryptocom
+
+_kraken
 
 _verodata_status
 

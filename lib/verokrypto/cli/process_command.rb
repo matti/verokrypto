@@ -29,6 +29,8 @@ module Verokrypto
                    Verokrypto::Inodez.from_csv(reader)
                  when 'cryptocom'
                    Verokrypto::Cryptocom.from_csv(reader)
+                 when 'kraken'
+                   Verokrypto::Kraken.from_csv(reader)
                  when 'tradeogre:withdrawals'
                    Verokrypto::Tradeogre.withdrawals_from_csv(reader)
                  when 'tradeogre:deposits'
