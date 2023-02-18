@@ -66,25 +66,25 @@ module Verokrypto
 
           e
         when 'withdraw'
-          e = Verokrypto::Event.new :coinex_withdrawal
-
-          e.date = values.fetch('Time')
-
-          e.debit = [
-            values.fetch('Asset change'),
-            values.fetch('Coin')
-          ]
+          e = Verokrypto::Event.new(
+            :coinex_withdrawal,
+            date: values.fetch('Time'),
+            debit: [
+              values.fetch('Asset change'),
+              values.fetch('Coin')
+            ]
+          )
 
           e
         when 'deposit'
-          e = Verokrypto::Event.new :coinex_deposit
-
-          e.date = values.fetch('Time')
-
-          e.credit = [
-            values.fetch('Asset change'),
-            values.fetch('Coin')
-          ]
+          e = Verokrypto::Event.new(
+            :coinex_deposit,
+            date: values.fetch('Time'),
+            credit: [
+              values.fetch('Asset change'),
+              values.fetch('Coin')
+            ]
+          )
 
           e
         else
