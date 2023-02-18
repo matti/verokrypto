@@ -15,10 +15,8 @@ module Verokrypto
         end
 
         source = case source_name
-                 when 'coinex:trades'
-                   Verokrypto::Coinex.trades_from_xlsx(reader)
-                 when 'coinex:assets'
-                   Verokrypto::Coinex.assets_from_xlsx(reader)
+                 when 'coinex-csv'
+                   Verokrypto::CoinexCsv.parse_transactions(reader)
                  when 'coinbase'
                    Verokrypto::Coinbase.from_csv(reader)
                  when 'southxchange'

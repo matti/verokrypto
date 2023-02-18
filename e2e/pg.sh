@@ -114,6 +114,10 @@ _raptoreum_paulus() {
   ;
 }
 
+_coinex() {
+  _process coinex-csv coinex "${BASE_DATA}"/coinex/coinex-mafianode-oma-kolmasosa.csv
+}
+
 _tradeogre() {
   local wallet_name="tradeogre"
   local tempdir; tempdir="$(mktemp -d)"
@@ -152,6 +156,8 @@ _raptoreum_paulus
 _process coinbase coinbase \
   ${BASE_DATA}/coinbase/"2023-01-06-coinbase.csv" \
 ;
+
+_coinex
 
 _tradeogre
 

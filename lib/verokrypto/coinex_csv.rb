@@ -12,71 +12,84 @@ module Verokrypto
     end
 
     def sort!
-      return
-    end
-
-    def self.deposits(reader)
-      fields, *rows = Verokrypto::Helpers.parse_csv(reader)
-
-      events = rows.filter_map do |row|
-        values = Verokrypto::Helpers.valuefy(fields, row)
-
-        e = Verokrypto::Event.new :coinex_deposit
-
-        e.date = values.fetch('Time')
-
-        e.credit = [
-          values.fetch('Asset change'),
-          values.fetch('Coin')
-        ]
-
-        e
-      end
-
-      new events
-    end
-
-    def self.withdrawals(reader)
-      fields, *rows = Verokrypto::Helpers.parse_csv(reader)
-
-      events = rows.filter_map do |row|
-        values = Verokrypto::Helpers.valuefy(fields, row)
-
-        e = Verokrypto::Event.new :coinex_withdrawal
-
-        e.date = values.fetch('Time')
-
-        e.debit = [
-          values.fetch('Asset change'),
-          values.fetch('Coin')
-        ]
-
-        e
-      end
-
-      new events
+      @events.reverse!
     end
 
     # CSV has a single trade in three rows
     # 1. row is FEE -0.18910
     # 2. row is TO_CURRENCY USDT,+67.89123
     # 3. row is FROM_CURRENCY RTM,-321.01234
-    def self.trades(reader)
+    def self.parse_transactions(reader)
       fields, *rows = Verokrypto::Helpers.parse_csv(reader)
+
+      trade_event_memo = nil
 
       events = rows.filter_map do |row|
         values = Verokrypto::Helpers.valuefy(fields, row)
 
-        e = Verokrypto::Event.new :coinex_trade
+        case values.fetch('Operation')
+        when 'trade'
+          if trade_event_memo.nil?
+            trade_event_memo = {
+              date: values.fetch('Time'),
+              fee: [
+                values.fetch('Asset change'),
+                values.fetch('Coin')
+              ],
+              to: nil,
+              from: nil
+            }
+          elsif trade_event_memo[:to].nil?
+            trade_event_memo[:to] = [
+              values.fetch('Asset change'),
+              values.fetch('Coin')
+            ]
+          elsif trade_event_memo[:from].nil?
+            trade_event_memo[:from] = [
+              values.fetch('Asset change'),
+              values.fetch('Coin')
+            ]
+          end
 
-        e.date = values.fetch('Time')
+          e = nil
 
-        e.debit = [
-          values.fetch('Asset change'),
-          values.fetch('Coin')
-        ]
+          if trade_event_memo[:date] && trade_event_memo[:fee] && trade_event_memo[:to] && trade_event_memo[:from]
+            e = Verokrypto::Event.new(
+              :coinex_trade,
+              date: trade_event_memo[:date],
+              fee: trade_event_memo[:fee],
+              credit: trade_event_memo[:to],
+              debit: trade_event_memo[:from]
+            )
+            trade_event_memo = nil
+          end
 
-        e
+          e
+        when 'withdraw'
+          e = Verokrypto::Event.new :coinex_withdrawal
+
+          e.date = values.fetch('Time')
+
+          e.debit = [
+            values.fetch('Asset change'),
+            values.fetch('Coin')
+          ]
+
+          e
+        when 'deposit'
+          e = Verokrypto::Event.new :coinex_deposit
+
+          e.date = values.fetch('Time')
+
+          e.credit = [
+            values.fetch('Asset change'),
+            values.fetch('Coin')
+          ]
+
+          e
+        else
+          raise 'Coinex: unknown operation'
+        end
       end
 
       new events
