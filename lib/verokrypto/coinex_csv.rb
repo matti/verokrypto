@@ -86,6 +86,10 @@ module Verokrypto
             ]
           )
 
+          if e.date < DateTime.new(2022, 7, 25) && values.fetch('Coin') == 'ETH'
+            e.label = 'mining'
+          end
+
           e
         else
           raise 'Coinex: unknown operation'
