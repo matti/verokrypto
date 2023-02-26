@@ -35,11 +35,19 @@ _process() {
   local tempdir; tempdir="$(mktemp -d)"
 
   local csv_temp_file="${tempdir}/${source_name}-${wallet_name}.csv"
+  local hmo_temp_file="${csv_temp_file}-hmo.csv"
   local koinly_csv_file="${KOINLY_DATA_PATH}/${wallet_name}.csv"
 
   _out "${koinly_csv_file}"
 
   _verokrypto process "${source_name}" "${source_file_paths[@]}" | _tee "${csv_temp_file}"
+
+  local source_file_dir; source_file_dir="$(dirname ${source_file_paths[0]})"
+  local hmo_path; hmo_path="${source_file_dir}/.hmo.csv"
+  if [[ -f ${hmo_path} ]]; then
+    _verokrypto hmo "${csv_temp_file}" "${hmo_path}" | _tee "${hmo_temp_file}"
+    mv -v "${hmo_temp_file}" "${koinly_csv_file}-hmo"
+  fi
 
   mv -v "${csv_temp_file}" "${koinly_csv_file}"
 }
