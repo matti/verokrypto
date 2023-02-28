@@ -30,7 +30,10 @@ module Verokrypto
 
             event_sell.debit_money = event.debit
             event_sell.credit = [
-              worth.to_f - (worth.to_f * 0.20) + cost_basis.to_f,
+              # worth.to_f - (worth.to_f * 0.20) + cost_basis.to_f,
+              # Right approach would need to set cost_basis := 0.80 * worth
+              # but it's not possible to define cost_basis in Koinly :/
+              cost_basis.to_f * 1.20,
               :eur
             ]
             event_buy.debit = [

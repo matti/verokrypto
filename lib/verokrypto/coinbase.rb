@@ -60,6 +60,7 @@ module Verokrypto
           ]
 
           # TODO: lol
+          # TODO: BTC 1.5.2021 - 15.3.2021 deposit "Received 0.00170546 BTC from NiceHash"
           if e.date > DateTime.new(2021, 1, 1) && (e.description.include? 'ETH from an external account')
             e.label = 'mining'
           end
