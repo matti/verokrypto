@@ -15,10 +15,8 @@ module Verokrypto
         end
 
         source = case source_name
-                 when 'coinex:trades'
-                   Verokrypto::Coinex.trades_from_xlsx(reader)
-                 when 'coinex:assets'
-                   Verokrypto::Coinex.assets_from_xlsx(reader)
+                 when 'coinex-csv'
+                   Verokrypto::CoinexCsv.parse_transactions(reader)
                  when 'coinbase'
                    Verokrypto::Coinbase.from_csv(reader)
                  when 'southxchange'
@@ -31,6 +29,8 @@ module Verokrypto
                    Verokrypto::Inodez.from_csv(reader)
                  when 'cryptocom'
                    Verokrypto::Cryptocom.from_csv(reader)
+                 when 'kraken'
+                   Verokrypto::Kraken.from_csv(reader)
                  when 'tradeogre:withdrawals'
                    Verokrypto::Tradeogre.withdrawals_from_csv(reader)
                  when 'tradeogre:deposits'
@@ -43,12 +43,14 @@ module Verokrypto
                    raise "Unknown '#{source_name}'"
                  end
 
+        source.name = source_name
         source.sort!
 
         last = nil
         source.events.each do |e|
           if last
             delta = e.date.to_time - last.date.to_time
+
             e.date_override = (last.date.to_time + 1).to_datetime if delta <= 1
           end
 

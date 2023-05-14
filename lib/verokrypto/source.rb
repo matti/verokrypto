@@ -3,6 +3,7 @@
 module Verokrypto
   class Source
     attr_reader :events
+    attr_accessor :name
 
     def fees
       currencies = {}
