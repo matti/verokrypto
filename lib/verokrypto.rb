@@ -28,6 +28,8 @@ require_relative 'verokrypto/raptoreum'
 require_relative 'verokrypto/inodez'
 require_relative 'verokrypto/cryptocom'
 require_relative 'verokrypto/tradeogre'
+require_relative 'verokrypto/kucoin'
+require_relative 'verokrypto/atomic'
 
 module Verokrypto
   class Error < StandardError; end

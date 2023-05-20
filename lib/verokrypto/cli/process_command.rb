@@ -37,6 +37,16 @@ module Verokrypto
                    Verokrypto::Tradeogre.deposits_from_csv(reader)
                  when 'tradeogre:trades'
                    Verokrypto::Tradeogre.trades_from_csv(reader)
+                 when 'kucoin:deposits'
+                   Verokrypto::Kucoin.deposits_from_csv(reader)
+                 when 'kucoin:withdrawals'
+                   Verokrypto::Kucoin.withdrawals_from_csv(reader)
+                 when 'kucoin:spot'
+                   Verokrypto::Kucoin.spot_from_csv(reader)
+                 when 'kucoin:tradingbot'
+                   Verokrypto::Kucoin.tradingbot_from_csv(reader)
+                 when 'atomic'
+                   Verokrypto::Atomic.from_csv(reader)
                  when 'koinly'
                    Verokrypto::Koinly.from_csv(reader)
                  else

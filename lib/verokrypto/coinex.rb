@@ -59,6 +59,7 @@ module Verokrypto
         values = Verokrypto::Helpers.valuefy(fields, row)
         e = Verokrypto::Event.new :coinex_trade
         e.description = row.join(',')
+
         e.date = "#{values.fetch('Execution Time')} UTC"
         e.fee = [
           values.fetch('Fees'),

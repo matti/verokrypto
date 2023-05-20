@@ -27,14 +27,17 @@ module Verokrypto
         case values.fetch('Type')
         when 'Received with'
           label = values.fetch('Label')
-          e.label = received_labels.fetch(label)
+          received_label = received_labels.fetch(label)
+          e.label = received_label if received_label
+
           e.credit = [
             values.fetch('Amount (RTM)'),
             'RTM'
           ]
         when 'Sent to'
           label = values.fetch('Label')
-          e.label = sent_labels.fetch(label)
+          sent_label = sent_labels.fetch(label)
+          e.label = sent_label if sent_label
 
           e.debit = [
             values.fetch('Amount (RTM)').sub('-', ''),
@@ -79,7 +82,8 @@ module Verokrypto
                         end
         end
 
-        if e.label == 'mining' && e.description == '' && e.credit.to_f > 500
+        if e.label == 'mining' && e.description == '' && e.credit.to_f > 50_000
+          pp values
           pp e
           raise 'too big for mining'
         end
