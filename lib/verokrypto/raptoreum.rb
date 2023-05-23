@@ -20,7 +20,12 @@ module Verokrypto
         values = Verokrypto::Helpers.valuefy(fields, row)
         e = Verokrypto::Event.new :raptoreum
 
-        e.date = values.fetch('Date')
+        better_date = DateTime.parse(values.fetch('Date'))
+
+        # raptoreum export in 2022 is +3h more (+utc it seems)
+        better_date -= (3 * 1 / 24r) if better_date.year == 2022
+
+        e.date = better_date
         e.id = values.fetch('ID')
         e.description = values.fetch('Label')
 

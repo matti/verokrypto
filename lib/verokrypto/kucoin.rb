@@ -24,6 +24,9 @@ module Verokrypto
 
         e.date = DateTime.parse(values.fetch('Time(UTC+03:00)')) - (3 * 1 / 24r)
 
+        # before this something was sent from coinbase, after this direct from ethermine
+        e.label = 'mining' if values.fetch('Coin') == 'ETH' && e.date.year == 2022 && e.date.month >= 2
+
         e.credit = [
           values.fetch('Amount'),
           values.fetch('Coin')

@@ -30,51 +30,22 @@ module Verokrypto
 
         e.id = values.fetch('ORDERID')
 
-        three_hours_later = DateTime.parse(values.fetch('DATE')) + (3 * 1 / 24r)
-        e.date = three_hours_later
+        adjusted_date = DateTime.parse(values.fetch('DATE')).to_time.utc.to_datetime
+        e.date = adjusted_date
 
-        case values.fetch('TYPE')
-        when '-'
-          e.credit = case values.fetch('OUTAMOUNT')
-                     when '-'
-                       [
-                         values.fetch('INAMOUNT'),
-                         sanitize_currency(values.fetch('INCURRENCY'))
-                       ]
-                     else
-                       [
-                         values.fetch('OUTAMOUNT'),
-                         sanitize_currency(values.fetch('OUTCURRENCY'))
-                       ]
-                     end
-        when 'regular'
-          case values.fetch('OUTAMOUNT')
-          when '-'
-            e.credit = [
-              values.fetch('INAMOUNT'),
-              sanitize_currency(values.fetch('INCURRENCY'))
-            ]
-          else
-            e.debit = [
-              values.fetch('OUTAMOUNT'),
-              sanitize_currency(values.fetch('OUTCURRENCY'))
-            ]
-          end
-        when 'Transfer'
-          case values.fetch('OUTAMOUNT')
-          when '-'
-            e.credit = [
-              values.fetch('INAMOUNT'),
-              sanitize_currency(values.fetch('INCURRENCY'))
-            ]
-          else
-            e.debit = [
-              values.fetch('OUTAMOUNT'),
-              sanitize_currency(values.fetch('OUTCURRENCY'))
-            ]
-          end
+        if values.fetch('INAMOUNT').to_f > 0
+          e.credit = [
+            values.fetch('INAMOUNT'),
+            sanitize_currency(values.fetch('INCURRENCY'))
+          ]
+        elsif values.fetch('OUTAMOUNT').to_f > 0
+          e.debit = [
+            values.fetch('OUTAMOUNT'),
+            sanitize_currency(values.fetch('OUTCURRENCY'))
+          ]
         else
-          raise 'WAT'
+          # fee or some shit like that
+          next
         end
 
         e
